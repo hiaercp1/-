@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
+from Crypto.Util.Padding import unpad
+from getpass4 import getpass
+import sys
+import os
+import argparse
+
+# Making list for files that will be ENCRYPTED or DECRYPTED.
+files_to_ed = []
+
+# Searching for files that are expected as arguments in the terminal. 
+try:
+    for argm in sys.argv[1:]:
+        if os.path.isfile(argm):
+            files_to_ed.append(argm)
+except:
+    print("[*] There are no files or arguments!")
+
+# Asking user what will the password for encryption or decryption be.
+key = getpass("[*] PASSWORD: ")
+
+# Encoding the password to UTF-8.
+secondpassword = key.encode(encoding='utf-8')
+
+# Checking if the password is exactly 16 bytes long otherwise it will give error.
+if len(key) != 16:
+    print("[*] The key MUST be 16 bytes!")
+    sys.exit()
+
+# The first argument is expected to be -e or -d which stand for -e : ENCRYPTION and -d : DECRYPTION.
+try:
+    argument = sys.argv[2]
+except:
+    ed = input("[*] Encrypt or Decrypt? (e/d)")
+
+ # Making function named ENCRYPT for encrypting files, if you use the function you must specify 
+ # PASSWORD or the password will be: "mysecretpassword"
+
+def Encrypt(password="mysecretpassword"):
+    
+    # Every file in the list will be Encrypted with the same password.
+    for file in files_to_ed:
+        with open(file, "rb") as x:
+            contentoffile = x.read()
+            cipher = AES.new(secondpassword,AES.MODE_ECB)
+            econtent = cipher.encrypt(pad(contentoffile, AES.block_size))
+
+        with open(file, "wb") as y:
+            y.write(econtent)
+
+# Making function named DECRYPT for decrypting files, if you use the function you must specify 
+# PASSWORD or the password will be: "mysecretpassword" 
+          
+def Decrypt(password="mysecretpassword"):
+    
+    # Every file in the list will be Decrypted with the same password.
+    for file in files_to_ed:
+        with open(file, "rb") as x:
+            contentoffile = x.read()
+            cipher = AES.new(secondpassword,AES.MODE_ECB)
+            dcontent = unpad(cipher.decrypt(contentoffile), AES.block_size)
+
+        with open(file, "wb") as y:
+            y.write(dcontent)
+
+
+# Checking what are the arguments.
+# If the argument is -e the Encryption will start.
+# If the argument is -d the Decryption will start.
+try:
+    if argument == "-e":
+        Encrypt()
+
+    elif argument == "-d":
+        Decrypt()
+except:
+    if ed == "e":
+        Encrypt()
+
+    elif ed == "d":
+        Decrypt()
+        
+        
+        
+        
+        
+# made by MARTIN RAJNOCH
