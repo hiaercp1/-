@@ -72,16 +72,16 @@ def Decrypt(password="mysecretpassword"):
 # If the argument is -d the Decryption will start.
 try:
     if argument == "-e":
-        Encrypt()
+        Encrypt(secondpassword)
 
     elif argument == "-d":
-        Decrypt()
+        Decrypt(secondpassword)
 except:
     if ed == "e":
-        Encrypt()
+        Encrypt(secondpassword)
 
     elif ed == "d":
-        Decrypt()
+        Decrypt(secondpassword)
         
         
         
